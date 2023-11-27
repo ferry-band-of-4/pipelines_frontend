@@ -1,0 +1,8 @@
+__pycache__/
+venv/
+image_dir/
+image_dir_no_axis/
+EEG_data/
+dataverse_files.zip
+resnet-finetune-adam-epoch_20-20231122T170326Z-001.zip
+resnet-finetune-adam-epoch_20
