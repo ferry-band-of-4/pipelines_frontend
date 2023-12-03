@@ -101,7 +101,7 @@ def main():
                     columns[col].write(f"Signal {idx + 1}: {signal_labels[idx]}")
 
         # Call the endpoint when the user finishes uploading the file
-        if st.button("Call FastAPI Endpoint"):
+        if st.button("diagnose for schzophrenia"):
             #files = {"file": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
             response = call_endpoint(uploaded_file.name)
 
