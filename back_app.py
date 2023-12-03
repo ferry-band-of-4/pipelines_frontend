@@ -279,6 +279,46 @@ def new_preprocess(image_folder):
     data_loader = torch.utils.data.DataLoader(custom_dataset, batch_size=batch_size, shuffle=True)
     return data_loader
 
+
+@profile
+def plot_predictions(prediction_dict):
+    plt.close('all')
+    plt.rcParams['figure.facecolor'] = 'black'
+    plt.rcParams['axes.facecolor'] = 'black'
+
+    plt.figure(figsize=(20, 10))
+    colors = ['tomato' if value > 0.5 else 'skyblue' for value in prediction_dict.values()]
+    values = [values if values > 0.5 else 1-values for values in prediction_dict.values()]
+    bars = plt.bar(prediction_dict.keys(), values, color=colors)
+    plt.yticks(color='white')
+    plt.xticks(rotation=90, color='white')  
+    plt.bar_label(plt.bar(prediction_dict.keys(), values, color=colors), labels=[round(value, 2) for value in values], padding=3, color='white')
+    plt.ylim(0, 1.5)
+
+
+    # Add legend with custom labels
+    if "tomato" not in colors:
+        legend_labels = ['Healthy']
+    elif "skyblue" not in colors:
+        legend_labels = ['Schizophrenic']
+    else:
+        legend_labels = ['Healthy', 'Schizophrenic']
+
+    
+    legend = plt.legend(bars, legend_labels, loc='upper right', fontsize='large', frameon=False, title='Class',  labelcolor='white')
+
+    # Set legend title color
+    legend.get_title().set_color('white')
+
+    # Set color of X and Y axes to white
+    ax = plt.gca()
+    ax.spines['bottom'].set_color('white')
+    ax.spines['left'].set_color('white')
+    plt.savefig("predictions.png", bbox_inches='tight', pad_inches=0, format='png', facecolor='black')
+    plt.close()
+    return True
+
+
 @profile
 def model_prediction(data_loader, model):
     model.eval()   
@@ -297,21 +337,13 @@ def model_prediction(data_loader, model):
         for i in range(len(round_outputs)):
             prediction_dict[channel_names[i]] = round_outputs[i].item()
             actual_preds[channel_names[i]] = outputs[i].item()
-    
 
+    plot_predictions(actual_preds)
     
     return prediction_dict
 
 
     
-
-
-
-
-    
-
-
-
 
 UPLOAD_FOLDER = "edf_buffer"
 IMAGE_BUFFER = "image_buffer"
@@ -365,9 +397,11 @@ def predict():
             count+=1
 
     if count >= 19 - count:
-        prediction_dict["prediction"] = "Scizo positive"
+        prediction_dict["prediction"] = "Schizo positive"
     else:
-        prediction_dict["prediction"] = "Scizo negative"
+        prediction_dict["prediction"] = "Schizo negative"
+    
+    
 
     return prediction_dict
 

@@ -120,14 +120,26 @@ def main():
             image_directory = "grad_cams"
             image_files = load_images_from_directory(image_directory)
 
+            skizo_positive_text = "## You have a high possibility of having schizophrenia"
+            skizo_negative_text = "## You have a low possibility of having schizophrenia"
+
             if not image_files:
                 st.warning("No images found in the directory!")
             else:
                 for image_file in image_files:
                     image_path = os.path.join(image_directory, image_file)
                     st.image(image_path, caption=image_file, use_column_width=True)
-            st.markdown("you have :" + ans)
+            if ans == 'Schizo positive':
+                #st.markdown("you have :" + ans)
+                st.write(skizo_positive_text)
+            else:
+                #st.markdown("you have :" + ans)
+                st.write(skizo_negative_text)
+            #st.markdown("you have :" + ans)
             requests.get("http://127.0.0.1:8000/clear_dir")
+            prediction_image_path = "predictions.png"
+            st.image(prediction_image_path, caption='bar graph', use_column_width=True)
+            os.remove(prediction_image_path)
 
 
 
